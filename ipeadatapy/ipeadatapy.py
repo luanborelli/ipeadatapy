@@ -17,8 +17,8 @@ def sources():
     api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Fontes"
     return basic_api_call(api).rename(index=str, columns={"FNTID": "ID", "FNTSIGLA": "SIGLA"})['SIGLA']
 
-def metadata(serie=None):
-    url_final = "('%s')" % serie if serie is not None else ""
+def metadata(series=None):
+    url_final = "('%s')" % series if series is not None else ""
     api = "http://www.ipeadata.gov.br/api/v1/Metadados%s" % url_final
     return basic_api_call(api)
 
@@ -27,10 +27,10 @@ def metadata_odata4(series=None):
     api = "http://www.ipeadata.gov.br/api/odata4/Metadados%s" % pos_fix
     return basic_api_call(api)
 
-def list_series(series=None):
-    if series is not None:
+def list_series(keyword=None):
+    if keyword is not None:
         df = metadata_odata4()[['SERCODIGO','SERNOME']].rename(index=str, columns={"SERCODIGO": "Código", "SERNOME": "Nome da série"})
-        df_f = df.loc[df['Nome da série'] == series]
+        df_f = df[df['Nome da série'].str.contains(keyword)]
     else:
         df_f = metadata_odata4()[['SERCODIGO','SERNOME']].rename(index=str, columns={"SERCODIGO": "Código", "SERNOME": "Nome da série"})
     return df_f
@@ -98,14 +98,27 @@ def describe(series):
     else:
         print("Status da série: "+ list(metadata(series)['SERSTATUS'])[0])
 
-def dataseries(serie, groupby=None):
+def timeseries(series, groupby=None):
     if groupby is not None:
-        df = get_nivel_region(serie)
+        df = get_nivel_region(series)
         if df['NIVNOME'].isin([groupby]).any():
             api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors"
                    "(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby"
-                   "=SERATUALIZACAO&$count=true").format(serie, groupby)
+                   "=SERATUALIZACAO&$count=true").format(series, groupby)
             return basic_api_call(api)
         return None
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % serie
-    return basic_api_call(api).rename(index=str, columns={"SERCODIGO": "CODIGO", "VALDATA": "DATA", "VALVALOR": "VALOR ("+list(metadata(serie)['UNINOME'])[0]+")"})
+    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % series
+    
+    if list(metadata(series)['BASNOME']) == ['Regional']:
+        ts_df = basic_api_call(api).rename(index=str, columns={"SERCODIGO": "CODIGO", "VALDATA": "DATA", "VALVALOR": "VALOR ("+list(metadata(series)['UNINOME'])[0]+")"})
+    else: 
+        ts_df = basic_api_call(api)[['ANO','DIA','MES','SERCODIGO','VALDATA','VALVALOR']].rename(index=str, columns={"SERCODIGO": "CODIGO", "VALDATA": "DATA", "VALVALOR": "VALOR ("+list(metadata(series)['UNINOME'])[0]+")"})
+        #basic_api_call(api).rename(index=str, columns={"SERCODIGO": "CODIGO", "VALDATA": "DATA", "VALVALOR": "VALOR ("+list(metadata(series)['UNINOME'])[0]+")"})
+    return ts_df
+
+def last_updated():  
+    df_last_updated = metadata_odata4().sort_values(by='SERATUALIZACAO', ascending=False)[['SERCODIGO', 'SERNOME','SERATUALIZACAO']].rename(index=str, columns={"SERCODIGO": "CODIGO", "SERNOME": "Nome da Série", "SERATUALIZACAO": "Data/Hora de Atualização"})
+    num_of_updated_series = list(df_last_updated['Data/Hora de Atualização'].str.contains('2019-03-22')).count(True)
+    print('Number of series updated today:')
+    print(num_of_updated_series)
+    return df_last_updated
