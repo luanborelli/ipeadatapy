@@ -1,4 +1,5 @@
 # ipeadatapy
+[![](https://img.shields.io/pypi/v/ipeadatapy.svg?color=blue&label=PyPI&style=popout-square)](https://pypi.org/project/ipeadatapy/) [![](https://img.shields.io/pypi/dm/ipeadatapy.svg?color=blue&style=flat-square)](http://www.google.com)
 # What is it?
 ipeadatapy is a data and metadata extraction package made in Python using Ipeadata database official API.
 
