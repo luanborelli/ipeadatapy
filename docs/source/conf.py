@@ -45,8 +45,6 @@ extensions = [
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'rst2pdf.pdfbuilder',
-    'rinoh.frontend.sphinx'
 ]
 
 pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Luan Borelli'),]
