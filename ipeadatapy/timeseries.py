@@ -3,6 +3,7 @@ from .api_call import api_call
 from .metadata import metadata
 
 def timeseries(series, groupby=None):
+    """Returns the specified time series' data values. `series` must be a time series code."""
     if groupby is not None:
         df = get_nivel_region(series)
         if df['NIVNOME'].isin([groupby]).any():

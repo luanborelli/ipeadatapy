@@ -2,6 +2,7 @@ import requests as req
 import pandas as pd
 
 def api_call(api):
+    """For advanced users. Returns raw Ipeadata API data in the form of a data frame."""
     response = req.get(api)
     if response.status_code == req.codes.ok:
         json_response = response.json()
