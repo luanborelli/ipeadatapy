@@ -9,11 +9,11 @@ Ipeadatapy allows you to manipulate, visualize and extract data and metadata fro
 
 - Searches for time series by name using `ipeadatapy.list_series('SERIES NAME')`;
 - Describes Ipeadata's time series using `ipeadatapy.describe('SERIES CODE')`;
-- Shows Ipeadata's time series data using `ipeadatapy.dataseries('SERIES CODE')`;
+- Shows Ipeadata's time series data using `ipeadatapy.timeseries('SERIES CODE')`;
 - Lists in a dataframe Ipeadata's... 
   - time series names and codes using `ipeadatapy.list_series()`;
   - time series sources using `ipeadatapy.sources()`;
-  - time series update date from the most to the least recently updated using `ipeadatapy.latest_updates()`. This function also returns the number of time series updated on the current day.;
+  - time series update date from the most to the least recently updated using `ipeadatapy.latest_updates()`;
   - available countries using `ipeadatapy.countries()`;
   - available territories using `ipeadatapy.territories()`;
   - available themes using `ipeadatapy.themes()`.
@@ -25,5 +25,11 @@ Binary installers for the latest released version are available at [Python packa
 
 `pip install ipeadatapy`
 
+# Documentation
+The official documentation is hosted on [author's website](http://www.luanborelli.net/): [luanborelli.com/ipeadatapy/docs](http://www.luanborelli.net/ipeadatapy/docs)
+
 # Dependencies
 The only dependecies are [pandas](https://github.com/pandas-dev/pandas)  and [requests](https://github.com/kennethreitz/requests). 
+
+# License
+[MIT](https://github.com/luanborelli/ipeadatapy/blob/master/LICENSE)
