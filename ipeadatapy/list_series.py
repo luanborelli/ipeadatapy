@@ -1,7 +1,7 @@
 import pandas as pd
-from .metadata_odata4 import metadata_odata4
+from .metadata import metadata
 
-def list_series(keyword=None):
+def list_series(keyword=None, code=None, name=None):
     """Lists Ipeadata available time series.
 
     :param keyword: Filtering keyword, defaults to None
@@ -10,9 +10,14 @@ def list_series(keyword=None):
 keyword.
     :rtype: pandas.DataFrame
     """
+    df = metadata()[['CODE','NAME']]
+    if code is not None:
+        df = df.loc[df["CODE"] == code]
+    if name is not None:
+        df = df.loc[df["NAME"] == name]
+        
     if keyword is not None:
-        df = metadata_odata4()[['CODE','NAME']]
         df_f = df[df['NAME'].str.contains(keyword)]
     else:
-        df_f = metadata_odata4()[['CODE','NAME']]
+        df_f = df
     return df_f

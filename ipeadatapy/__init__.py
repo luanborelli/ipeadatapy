@@ -3,8 +3,8 @@ import pandas as pd
 
 from .api_call import api_call
 from .sources import sources
-from .metadata import metadata
-from .metadata_odata4 import metadata_odata4
+from .metadata import metadata_old
+from .metadata_odata4 import metadata
 from .list_series import list_series
 from .describe import describe
 from .timeseries import timeseries
