@@ -4,7 +4,7 @@ import pandas as pd
 from .api_call import api_call
 from .sources import sources
 from .metadata_old import metadata_old
-from .metadata_odata4 import metadata
+from .metadata import metadata
 from .list_series import list_series
 from .describe import describe
 from .timeseries import timeseries
