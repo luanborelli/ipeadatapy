@@ -1,22 +1,28 @@
-# ipeadatapy
+![ipeadatapy](https://user-images.githubusercontent.com/35273857/57802576-ad397100-772c-11e9-82fc-a30fc1fbe774.png)
+# ipeadatapy: an API wrapper for Ipeadata
 [![](https://img.shields.io/pypi/v/ipeadatapy.svg?color=blue&label=PyPI&style=popout-square)](https://pypi.org/project/ipeadatapy/) [![](https://img.shields.io/pypi/dm/ipeadatapy.svg?color=blue&style=flat-square)](https://pypi.org/project/ipeadatapy/)
+
 # What is it?
-ipeadatapy is a data and metadata manipulation, visualization and extraction package made in Python using Ipeadata database official API. In it's essence it is an API wrapper.
+
+The main purpose of Ipeadatapy package is to provide a way of extracting data from [Ipeadata](http://ipeadata.gov.br/Default.aspx) through Python using Ipeadata’s API. Thus, in this sense, Ipeadatapy is what is called an API wrapper. Nevertheless, the goal of the package is far from being only extract data. Ipeadatapy also is concerned with treating, cleaning and making more understandable the data provided by the API as well as providing data filtering and search mechanisms. Briefly, Ipeadatapy’s objective can be described as being to facilitate users to search and analyze time series data and metadata from Ipeadata database using Python.
 
 # Main Features
 
-Ipeadatapy allows you to manipulate, visualize and extract data and metadata from Ipeadata's database in a more efficient and practical way, directly from your Python script, notebook and/or interactive shell. Here are some of the package's features:
+Ipeadatapy allows you to extract processed data and metadata from Ipeadata's API in a more efficient and practical way, directly from your Python script, notebook and/or interactive shell. Here are some of the package's features:
 
-- Searches for time series by name using `ipeadatapy.list_series('SERIES NAME')`;
-- Describes Ipeadata's time series using `ipeadatapy.describe('SERIES CODE')`;
-- Shows Ipeadata's time series data using `ipeadatapy.timeseries('SERIES CODE')`;
-- Lists in a dataframe Ipeadata's... 
-  - time series names and codes using `ipeadatapy.list_series()`;
-  - time series sources using `ipeadatapy.sources()`;
-  - time series update date from the most to the least recently updated using `ipeadatapy.latest_updates()`;
-  - available countries using `ipeadatapy.countries()`;
-  - available territories using `ipeadatapy.territories()`;
-  - available themes using `ipeadatapy.themes()`.
+- Lists in data frames all Ipeadata's available... 
+  - Time series names and codes;
+  - Sources;
+  - Countries;
+  - Territories;
+  - Themes.
+- Basic time series searching mechanism;
+- Data filtering through defined functions parameters;
+- Show time series data and metadata;
+- Filter time series data set by day, month and/or year;
+- Track latest updated time series.
+
+Using pandas, one of the package dependecies, you can also plot and extract data and metadata. For more details check the [documentation](luanborelli.com/ipeadatapy/docs).
 
 # Where to get it
 The source code is currently hosted on [Ipeadatapy's GitHub](https://github.com/luanborelli/ipeadatapy/).
