@@ -3,7 +3,37 @@ from .api_call import api_call
 from .metadata_old import metadata_old
 
 def timeseries(series, groupby=None, year=None, yearGreaterThan=None, yearSmallerThan=None, day=None, dayGreaterThan=None, daySmallerThan=None, month=None, monthGreaterThan=None, monthSmallerThan=None, code=None, date=None):
-    """Returns the specified time series' data values. `series` must be a time series code."""
+    """
+    Returns the specified time series' data values. `series` must be a time series code
+    :param series: Time series code. For the available time series run list_series()
+    :type series: str
+    :param groupby: Grouping criteria
+    :type groupby: str, optional
+    :param year: Year which the data set will be restricted to.
+    :type year: int, optional
+    :param yearGreaterThan: Year which the data set will be restricted to years strictly greater.
+    :type yearGreaterThan: int, optional
+    :param yearSmallerThan: Year which the data set will be restricted to years strictly smaller.
+    :type yearSmallerThan: int, optional
+    :param day: Day which the data set will be restricted to.
+    :type day: int, optional
+    :param dayGreaterThan: Day which the data set will be restricted to days strictly greater.
+    :type dayGreaterThan: int, optional
+    :param daySmallerThan: Day which the data set will be restricted to days strictly smaller.
+    :type daySmallerThan: int, optional
+    :param month: Month which the data set will be restricted to.
+    :type month: int, optional
+    :param monthGreaterThan: Month which the data set will be restricted to months strictly greater.
+    :type monthGreaterThan: int, optional
+    :param monthSmallerThan: Month which the data set will be restricted to months strictly smaller.
+    :type monthSmallerThan: int, optional
+    :param code: Time series code which the data set will be restricted to.
+    :type code: str, optional
+    :param date: Date which the data set will be restricted to.
+    :type date: str, optional
+    :return: Returns the data series for the specified time series.
+    :rtype: pandas.DataFrame
+    """
     if groupby is not None:
         df = get_nivel_region(series)
         if df['NIVNOME'].isin([groupby]).any():

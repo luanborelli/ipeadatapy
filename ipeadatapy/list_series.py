@@ -6,8 +6,11 @@ def list_series(keyword=None, code=None, name=None):
 
     :param keyword: Filtering keyword, defaults to None
     :type keyword: str, optional
-    :return: If no keyword is specified, returns a data frame containing all Ipeadata’s time series. Else, returns only the ones that contains the specified keyword in their names.
-keyword.
+    :param code: Specifies a time series code to return. code must be a time series code respecting case sensitiveness
+    :type code: str, optional
+    :param name: Specifies a time series name to return. name must be a time series name respecting case sensitiveness
+    :type name: str, optional
+    :return: If no keyword is specified, returns a data frame containing all Ipeadata’s time series. Otherwise, returns a data frame respecting the introduced parameters
     :rtype: pandas.DataFrame
     """
     df = metadata()[['CODE','NAME']]
