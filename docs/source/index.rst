@@ -12,7 +12,8 @@ ipeadatapy is a data and metadata manipulation, visualization and extraction pac
    :maxdepth: 2
    :caption: Contents:
 
+   about
    usage/installation
-   usage/quickstart
+   usage/getting_started
    usage/functions
 

@@ -11,7 +11,7 @@ Let's first import ipeadatapy package.
 
 >>> import ipeadatapy
 
-then, let's suppose that we already know which time series we want to extract and already found his code using the list_series() function. Let, e.g., this time series be the one which the code is GM366_ERC366. Thus, we can show the data calling the following function: 
+then, let's suppose that we already know which time series we want to extract and already found his code using the ``list_series()`` function. Let, e.g., this time series be the one which the code is GM366_ERC366. Thus, we can show the data calling the following function: 
 
 >>> ipeadatapy.timeseries('GM366_ERC366')
        YEAR  DAY  MONTH          CODE                       DATE    VALUE (R$)
@@ -25,7 +25,7 @@ To extract this dataframe as a .xlsx file you simply do:
 
 >>> ipeadatapy.timeseries('GM366_ERC366').to_excel('.../path/yourFileName.xlsx')
 
-If you prefer, you can extract the data in csv format instead of xlsx. For this, you can use the function called '.to_csv()':
+If you prefer, you can extract the data in csv format instead of xlsx. For this, you can use the function called ``to_csv()``:
 
 >>> ipeadatapy.timeseries('GM366_ERC366').to_csv('.../path/yourFileName.csv', sep=';')
 
@@ -50,4 +50,4 @@ The output will be three '.csv' files: GM366_ERC366.csv, IBMEC12_TJTIT12.csv and
 Extracting other kinds of data
 #################################
 
-Ipeadatapy's functions were defined to always return data in the form of data frames. Thus, every function output can be extracted using pandas' .to_csv() or .to_excel() functions in the same way we've shown in the past example. 
+Ipeadatapy's functions were defined to always return data in the form of data frames. Thus, every function output can be extracted using pandas' ``to_csv()`` or ``to_excel()`` functions in the same way we've shown in the past example. 
