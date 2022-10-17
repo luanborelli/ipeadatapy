@@ -1,7 +1,27 @@
-import pandas as pd
+from pandas import DataFrame
 from .api_call import api_call
 
-def metadata(series=None, big_theme=None, source=None, country=None, frequency=None, unit=None, measure=None, status=None, source_ext=None, source_url=None, last_update=None, code=None, comment=None, name=None, numerica=None, theme_id=None):
+mdReturn = None
+
+
+def metadata(
+    series: str = None,
+    big_theme: str = None,
+    source: str = None,
+    country: str = None,
+    frequency: str = None,
+    unit: str = None,
+    measure: str = None,
+    source_ext: str = None,
+    source_url: str = None,
+    last_update: str = None,
+    code: str = None,
+    comment: str = None,
+    name: str = None,
+    numerica: str = None,
+    theme_id: str = None,
+    force_update: bool = False,
+) -> DataFrame:
     """
     :param series: Time series code.
     :type series: str, optional
@@ -17,8 +37,6 @@ def metadata(series=None, big_theme=None, source=None, country=None, frequency=N
     :type unit: str, optional
     :param measure: Measure by which the return will be filtered.
     :type measure: str, optional
-    :param status: Status by which the return will be filtered. Available options: "A" and "I"
-    :type status: str, optional
     :param source_ext: Source extended name by which the return will be filtered.
     :type source_ext: str, optional
     :param source_url: Source URL by which the return will be filtered.
@@ -37,35 +55,55 @@ def metadata(series=None, big_theme=None, source=None, country=None, frequency=N
     :type theme_id: str, optional
     :return: If no keyword is specified, returns a data frame containing all Ipeadata's time series. Else, returns only the ones that respects the specified parameters
     :rtype: pandas.DataFrame"""
-    pos_fix = "('%s')" % series if series is not None else ""
-    api = "http://www.ipeadata.gov.br/api/odata4/Metadados%s" % pos_fix
-    mdReturn = api_call(api).rename(index=str, columns={"TEMNOME": "THEME", "BASNOME": "BIG THEME", "FNTNOME": "SOURCE", "FNTSIGLA": "SOURCE ACRONYM", "FNTURL": "SOURCE URL", "MULNOME": "UNIT", "PAICODIGO": "COUNTRY", "PERNOME": "FREQUENCY", "SERATUALIZACAO": "LAST UPDATE", "SERCODIGO": "CODE", "SERCOMENTARIO": "COMMENT", "SERNOME": "NAME", "SERNUMERICA": "NUMERICA", "SERSTATUS": "SERIES STATUS", "TEMCODIGO": "THEME CODE", "UNINOME": "MEASURE"})
-    if big_theme is not None:
-        mdReturn = mdReturn.loc[mdReturn["BIG THEME"] == big_theme]
-    if source is not None:
-        mdReturn = mdReturn.loc[mdReturn["SOURCE ACRONYM"] == source]
-    if country is not None:
-        mdReturn = mdReturn.loc[mdReturn["COUNTRY"] == country]
-    if frequency is not None:
-        mdReturn = mdReturn.loc[mdReturn["FREQUENCY"] == frequency]
-    if unit is not None:
-        mdReturn = mdReturn.loc[mdReturn["UNIT"] == unit]
-    if measure is not None:
-        mdReturn = mdReturn.loc[mdReturn["MEASURE"] == measure]
-    if source_ext is not None:
-        mdReturn = mdReturn.loc[mdReturn["SOURCE"] == source_ext]
-    if source_url is not None:
-        mdReturn = mdReturn.loc[mdReturn["SOURCE URL"] == source_url]
-    if last_update is not None:
-        mdReturn = mdReturn.loc[mdReturn["LAST UPDATE"] == last_update]
-    if code is not None:
-        mdReturn = mdReturn.loc[mdReturn["CODE"] == code]
-    if comment is not None:
-        mdReturn = mdReturn.loc[mdReturn["COMMENT"] == comment]
-    if name is not None:
-        mdReturn = mdReturn.loc[mdReturn["NAME"] == name]
-    if numerica is not None:
-        mdReturn = mdReturn.loc[mdReturn["NUMERICA"] == numerica]
-    if theme_id is not None:
-        mdReturn = mdReturn.loc[mdReturn["THEME CODE"] == theme_id]
-    return mdReturn
+    global mdReturn
+    # Check if mdReturn has been initialized
+    if force_update or mdReturn == None:
+        pos_fix = "('%s')" % series if series is not None else ""
+        api = "http://www.ipeadata.gov.br/api/odata4/Metadados%s" % pos_fix
+
+        mdReturn = api_call(api).rename(
+            index=str,
+            columns={
+                "TEMNOME": "THEME",
+                "BASNOME": "BIG THEME",
+                "FNTNOME": "SOURCE",
+                "FNTSIGLA": "SOURCE ACRONYM",
+                "FNTURL": "SOURCE URL",
+                "MULNOME": "UNIT",
+                "PAICODIGO": "COUNTRY",
+                "PERNOME": "FREQUENCY",
+                "SERATUALIZACAO": "LAST UPDATE",
+                "SERCODIGO": "CODE",
+                "SERCOMENTARIO": "COMMENT",
+                "SERNOME": "NAME",
+                "SERNUMERICA": "NUMERICA",
+                "SERSTATUS": "SERIES STATUS",
+                "TEMCODIGO": "THEME CODE",
+                "UNINOME": "MEASURE",
+            },
+        )
+
+    filter_dict = {
+        "BIG THEME": big_theme,
+        "SOURCE ACRONYM": source,
+        "COUNTRY": country,
+        "FREQUENCY": frequency,
+        "UNIT": unit,
+        "MEASURE": measure,
+        "SOURCE": source_ext,
+        "SOURCE URL": source_url,
+        "LAST UPDATE": last_update,
+        "CODE": code,
+        "COMMENT": comment,
+        "NAME": name,
+        "NUMERICA": numerica,
+        "THEME CODE": theme_id,
+    }
+
+    # Filter the return
+    filtered_mdReturn = mdReturn.copy()
+    for key, value in filter_dict.items():
+        if value is not None:
+            filtered_mdReturn = filtered_mdReturn[filtered_mdReturn[key] == value]
+
+    return filtered_mdReturn
