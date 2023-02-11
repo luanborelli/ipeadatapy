@@ -1,7 +1,17 @@
-import pandas as pd
+from pandas import DataFrame
 from .api_call import api_call
 
-def themes(theme_id=None, name=None, macro=None, regional=None, social=None):
+thReturn = None
+
+
+def themes(
+    theme_id: int = None,
+    name: str = None,
+    macro: int = None,
+    regional: int = None,
+    social: int = None,
+    force_update: bool = False,
+) -> DataFrame:
     """
     :param theme_id: Theme ID by which the return will be filtered
     :type theme_id: int, optional
@@ -16,16 +26,23 @@ def themes(theme_id=None, name=None, macro=None, regional=None, social=None):
     :return: Returns available Ipeadata themes
     :rtype: pandas.DataFrame
     """
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Temas"
-    thReturn = api_call(api)[['TEMCODIGO','TEMNOME','MACRO','REGIONAL','SOCIAL']].rename(index=str, columns={"TEMCODIGO": "ID", "TEMNOME": "NAME"})
-    if theme_id is not None:
-        thReturn = thReturn.loc[thReturn["ID"] == theme_id]
-    if name is not None:
-        thReturn = thReturn.loc[thReturn["NAME"] == name]
-    if macro is not None:
-        thReturn = thReturn.loc[thReturn["MACRO"] == macro]
-    if regional is not None:
-        thReturn = thReturn.loc[thReturn["REGIONAL"] == regional]
-    if social is not None:
-        thReturn = thReturn.loc[thReturn["SOCIAL"] == social]
-    return thReturn
+    global thReturn
+    if force_update or thReturn is None:
+        api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Temas"
+        thReturn = api_call(api)[
+            ["TEMCODIGO", "TEMNOME", "MACRO", "REGIONAL", "SOCIAL"]
+        ].rename(index=str, columns={"TEMCODIGO": "ID", "TEMNOME": "NAME"})
+
+    filter_dict = {
+        "ID": theme_id,
+        "NAME": name,
+        "MACRO": macro,
+        "REGIONAL": regional,
+        "SOCIAL": social,
+    }
+    filtered_thReturn = thReturn.copy()
+
+    for key, value in filter_dict.items():
+        if value is not None:
+            filtered_thReturn = filtered_thReturn.loc[filtered_thReturn[key] == value]
+    return filtered_thReturn

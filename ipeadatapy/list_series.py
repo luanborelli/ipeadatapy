@@ -1,7 +1,8 @@
-import pandas as pd
+from pandas import DataFrame
 from .metadata import metadata
 
-def list_series(keyword=None, code=None, name=None):
+
+def list_series(keyword=None, code=None, name=None) -> DataFrame:
     """Lists Ipeadata available time series.
 
     :param keyword: Filtering keyword, defaults to None
@@ -13,14 +14,14 @@ def list_series(keyword=None, code=None, name=None):
     :return: If no keyword is specified, returns a data frame containing all Ipeadata’s time series. Otherwise, returns a data frame respecting the introduced parameters
     :rtype: pandas.DataFrame
     """
-    df = metadata()[['CODE','NAME']]
+    df = metadata()[["CODE", "NAME"]]
     if code is not None:
         df = df.loc[df["CODE"] == code]
     if name is not None:
         df = df.loc[df["NAME"] == name]
-        
+
     if keyword is not None:
-        df_f = df[df['NAME'].str.contains(keyword)]
+        df_f = df[df["NAME"].str.contains(keyword)]
     else:
         df_f = df
     return df_f
