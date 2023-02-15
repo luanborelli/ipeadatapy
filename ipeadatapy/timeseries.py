@@ -1,14 +1,13 @@
 import pandas as pd
 from .api_call import api_call
 from .metadata_old import metadata_old
+from .metadata import metadata
 
-def timeseries(series, groupby=None, year=None, yearGreaterThan=None, yearSmallerThan=None, day=None, dayGreaterThan=None, daySmallerThan=None, month=None, monthGreaterThan=None, monthSmallerThan=None, code=None, date=None):
+def timeseries(series, year=None, yearGreaterThan=None, yearSmallerThan=None, day=None, dayGreaterThan=None, daySmallerThan=None, month=None, monthGreaterThan=None, monthSmallerThan=None, code=None, date=None):
     """
     Returns the specified time series' data values. `series` must be a time series code
     :param series: Time series code. For the available time series run list_series()
     :type series: str
-    :param groupby: Grouping criteria
-    :type groupby: str, optional
     :param year: Year which the data set will be restricted to.
     :type year: int, optional
     :param yearGreaterThan: Year which the data set will be restricted to years strictly greater.
@@ -34,27 +33,31 @@ def timeseries(series, groupby=None, year=None, yearGreaterThan=None, yearSmalle
     :return: Returns the data series for the specified time series.
     :rtype: pandas.DataFrame
     """
-    if groupby is not None:
-        df = get_nivel_region(series)
-        if df['NIVNOME'].isin([groupby]).any():
-            api = ("http://ipeadata2-homologa.ipea.gov.br/api/v1/AnoValors"
-                   "(SERCODIGO='{}',NIVNOME='{}')?$top=100&$skip=0&$orderby"
-                   "=SERATUALIZACAO&$count=true").format(series, groupby)
-            return api_call(api)
-        return None
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % series
+
+    # api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % series # DEPRECATED.
+    # api = "http://ipeadata.gov.br/api/v1/ValoresSerie(SERCODIGO='%s')" % series # DEPRECATED. 
+    api = "http://ipeadata.gov.br/api/odata4/ValoresSerie(SERCODIGO='%s')" % series
+    series_metadata = metadata(series)
+    call = api_call(api)
     
-    if list(metadata_old(series)['BIG THEME']) == ['Regional']:
-        if list(metadata_old(series)['MEASURE'])[0] is not None:  
-            ts_df = api_call(api).rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE ("+list(metadata_old(series)['MEASURE'])[0]+")"})
+    if list(series_metadata['BIG THEME']) == ['Regional']:
+        if list(series_metadata['MEASURE'])[0] is not None:  
+            ts_df = call.rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE ("+list(series_metadata['MEASURE'])[0]+")"})
         else:
-            ts_df = api_call(api).rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE"})
-    elif list(metadata_old(series)['MEASURE'])[0] is not None:  
-        ts_df = api_call(api)[['ANO','DIA','MES','SERCODIGO','VALDATA','VALVALOR']].rename(index=str, columns={"ANO": "YEAR", "DIA": "DAY", "MES": "MONTH", "SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE ("+list(metadata_old(series)['MEASURE'])[0]+")"})
-        #api_call(api).rename(index=str, columns={"SERCODIGO": "CODIGO", "VALDATA": "DATA", "VALVALOR": "VALOR ("+list(metadata_old(series)['UNINOME'])[0]+")"})
+            ts_df = call.rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE"})
+    elif list(series_metadata['MEASURE'])[0] is not None:  
+        ts_df = call[['SERCODIGO','VALDATA','VALVALOR']].rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE ("+list(series_metadata['MEASURE'])[0]+")"})
     else: 
-        ts_df = api_call(api)[['ANO','DIA','MES','SERCODIGO','VALDATA','VALVALOR']].rename(index=str, columns={"ANO": "YEAR", "DIA": "DAY", "MES": "MONTH", "SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE"})
+        ts_df = call[['SERCODIGO','VALDATA','VALVALOR']].rename(index=str, columns={"SERCODIGO": "CODE", "VALDATA": "DATE", "VALVALOR": "VALUE"})
         
+    ts_df.rename(columns={'DATE':'RAW DATE'}, inplace=True)
+    ts_df['DATE'] = ts_df['RAW DATE'].str[0:10]
+    ts_df['DATE'] = pd.to_datetime(ts_df["DATE"])
+    ts_df['YEAR'] = pd.DatetimeIndex(ts_df['DATE']).year
+    ts_df['DAY'] = pd.DatetimeIndex(ts_df['DATE']).day
+    ts_df['MONTH'] = pd.DatetimeIndex(ts_df['DATE']).month
+    ts_df = ts_df.set_index(['DATE']).iloc[:,[0,1,4,5,3,2]]
+    
     if year is not None:
         ts_df = ts_df.loc[ts_df["YEAR"] == year]
     if yearGreaterThan is not None:
@@ -76,12 +79,7 @@ def timeseries(series, groupby=None, year=None, yearGreaterThan=None, yearSmalle
     if code is not None:
         ts_df = ts_df.loc[ts_df["CODE"] == code]
     if date is not None:
-        ts_df = ts_df.loc[ts_df["DATE"] == date]
-        
-    ts_df.rename(columns={'DATE':'RAW DATE'}, inplace=True)
-    ts_df['DATE'] = ts_df['RAW DATE'].str[0:10]
-    ts_df["DATE"] = pd.to_datetime(ts_df["DATE"])
-    ts_df = ts_df.set_index(['DATE'])
+        ts_df = ts_df.loc[ts_df["RAW DATE"] == date]
     
     return ts_df
 

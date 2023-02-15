@@ -20,8 +20,11 @@ def territories(name=None, level=None, territory_id=None, area=None, areaGreater
     :return: Returns available Ipeadata territories.
     :rtype: pandas.DataFrame
     """
-    api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Territorios"
-    tReturn = api_call(api)[['TERNOME', 'TERCODIGO', 'NIVNOME', 'TERAREA','TERCAPITAL']].rename(index=str, columns={"TERNOME": "NAME", "TERCODIGO": "ID","NIVNOME": "LEVEL","TERAREA": "AREA", "TERCAPITAL": "CAPITAL"})
+#   api = "http://ipeadata2-homologa.ipea.gov.br/api/v1/Territorios" # DEPRECATED.
+    api = "http://ipeadata.gov.br/api/odata4/Territorios"
+    call = api_call(api)
+    
+    tReturn = call[['TERNOME', 'TERCODIGO', 'NIVNOME', 'TERAREA','TERCAPITAL']].rename(index=str, columns={"TERNOME": "NAME", "TERCODIGO": "ID","NIVNOME": "LEVEL","TERAREA": "AREA", "TERCAPITAL": "CAPITAL"})
     if name is not None:
         tReturn = tReturn.loc[tReturn["NAME"] == name]
     if level is not None:
