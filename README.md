@@ -4,7 +4,7 @@
 
 # What is it?
 
-The primary purpose of the Ipeadatapy package is to provide a way to extract data from [Ipeadata](http://ipeadata.gov.br/Default.aspx) via Python, using [Ipeadata's API](http://ipeadata.gov.br/api/). In this regard, Ipeadatapy acts as an API wrapper. However, the package’s objectives go beyond merely extracting raw data. Ipeadatapy also focuses on pre-processing, cleaning, and enhancing the usability of the API's data, as well as offering data filtering and search capabilities. In short, Ipeadatapy aims to simplify the process for users to search and analyze data and metadata from the Ipeadata database using Python.
+The primary purpose of the Ipeadatapy package is to provide a way to extract data from [Ipeadata](http://ipeadata.gov.br/Default.aspx) via Python, using Ipeadata's [API](http://ipeadata.gov.br/api/). In this regard, Ipeadatapy acts as an API wrapper. However, the package’s objectives go beyond merely extracting raw data. Ipeadatapy also focuses on pre-processing, cleaning, and enhancing the usability of the API's data, as well as offering data search and filtering capabilities. In short, Ipeadatapy aims to simplify the process for users to search and analyze data and metadata from the Ipeadata database using Python.
 
 # Main Features
 
