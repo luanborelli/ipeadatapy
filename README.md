@@ -26,15 +26,17 @@ With [pandas](https://pandas.pydata.org/), one of the package's dependencies, yo
 
 # Where to get it
 
-The source code is currently hosted on [Ipeadatapy's GitHub](https://github.com/luanborelli/ipeadatapy/).
+The source code is currently hosted on Ipeadatapy's  [GitHub page](https://github.com/luanborelli/ipeadatapy/).
 
 Binary installers for the latest released version are available at [Python package index page](https://pypi.org/project/ipeadatapy/).
+
+Ipeadatapy can be installed via pip from [PyPI](https://pypi.org/project/ipeadatapy/):
 
 `pip install ipeadatapy`
 
 # Documentation
 
-The official documentation is available on [luanborelli.com/ipeadatapy/docs](http://www.luanborelli.net/ipeadatapy/docs).
+The official documentation is available on [luanborelli.net/ipeadatapy/docs](http://www.luanborelli.net/ipeadatapy/docs).
 
 # Dependencies
 
